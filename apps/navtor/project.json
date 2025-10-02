@@ -2,7 +2,7 @@
   "name": "navtor",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "app",
+  "prefix": "navtor",
   "sourceRoot": "apps/navtor/src",
   "tags": [],
   "targets": {
