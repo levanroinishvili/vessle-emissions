@@ -1,3 +1,7 @@
+/** After the Vessle data is merged with Emissions data */
+export type { ShipEmissions } from '../services/emissions.service'
+
+/** Raw API response, before the Vessle data is merged with Emissions data */
 export interface IntervalEmissions<DATE = Date> {
     id: number
     timeSeries: Emission<DATE>[]

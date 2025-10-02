@@ -3,10 +3,16 @@ import { inject, Injectable, isDevMode, PLATFORM_ID } from '@angular/core';
 import { IntervalEmissions } from '../models/emission.model';
 import { CONFIG, ENDPOINTS } from '../app.settings';
 import { DateString } from '../models/auxiliary';
-import { map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { randomVicissitudes } from '../utils/dev-test/rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { Identity } from '../utils/various';
+import { VesselService } from './vessel.service';
+import { Vessel } from '../models/vessel.model';
+import { ListedValueOf } from '../utils/type-helpers';
+
+/** Ship and Emissions data merged together */
+export type ShipEmissions = ListedValueOf<ReturnType<typeof mergeShipEmissions>>
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +20,19 @@ import { Identity } from '../utils/various';
 export class EmissionsService {
 
   private readonly httpClient = inject(HttpClient)
+  private readonly vesselService = inject(VesselService)
 
-    allEmissions$ = this.httpClient.get<IntervalEmissions<DateString>[]>(ENDPOINTS.getEmissions).pipe(
+    rawEmissions$ = this.httpClient.get<IntervalEmissions<DateString>[]>(ENDPOINTS.getEmissions).pipe(
       map(emissions => emissions.map(processEmission)),
       // Add random trouble: delays and occasional errors - only during development, but not on SSR
       CONFIG.simulateLife && isDevMode() && isPlatformBrowser(inject(PLATFORM_ID)) ? randomVicissitudes() : Identity,
+    )
+
+    emissions$ = combineLatest([
+      this.vesselService.allVessels$,
+      this.rawEmissions$,
+    ]).pipe(
+      map(([vessel, emissions]) => mergeShipEmissions(vessel, emissions)),
     )
 }
 
@@ -30,3 +44,30 @@ const processEmission = (intervals: IntervalEmissions<DateString>): IntervalEmis
     report_to_utc: new Date(timeSeries.report_to_utc),
   }))
 })
+
+function mergeShipEmissions(vessels: Vessel[], emissions: IntervalEmissions[]) {
+  const knownIds = vessels.map(vessel => vessel.id)
+  const unknownShipEmissions = emissions
+    .filter(shipEmissions => ! knownIds.includes(shipEmissions.id))
+    .map(shipEmissions => ({
+      ...unknownVessel,
+      id: shipEmissions.id,
+      emissions: shipEmissions.timeSeries,
+    }))
+  return vessels.map(vessel => ({
+    ...vessel,
+    emissions: emissions.find(shipEmissions => shipEmissions.id === vessel.id)?.timeSeries ?? []
+  })).concat(unknownShipEmissions)
+}
+
+const unknownVessel: Vessel = {
+  id: NaN,
+  name: 'Unknown Vessel',
+  mmsi: NaN,
+  imo: NaN,
+  companyId: NaN,
+  companyName: 'Unknown Company',
+  startDate: new Date(NaN), // Invalid date
+  active: false,
+  vesselType: 'Container'
+}

@@ -25,7 +25,7 @@ export class EmissionsFacade {
     load() {
         this.store.dispatch(EmissionsActions.load())
 
-        this.emissionsService.allEmissions$
+        this.emissionsService.emissions$
             .pipe(
                 tap(data => this.store.dispatch(EmissionsActions.loadSuccess({data}))),
                 catchError(err => {

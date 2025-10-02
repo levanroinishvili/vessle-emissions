@@ -1,13 +1,13 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { EmissionsActions } from './emissions.actions';
-import { IntervalEmissions } from '../../models/emission.model';
+import { ShipEmissions } from '../../models/emission.model';
 
 
 export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error'
 
 
 export interface EmissionsState {
-    data: IntervalEmissions[]
+    data: ShipEmissions[]
     status: LoadStatus
     error: string | null
 }
