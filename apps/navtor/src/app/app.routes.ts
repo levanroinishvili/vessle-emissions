@@ -11,7 +11,7 @@ export const appRoutes: Route[] = [
     },
     {
         path: '',
-        redirectTo: 'vessels',
+        redirectTo: 'emissions',
         pathMatch: 'full',
     },
     {
