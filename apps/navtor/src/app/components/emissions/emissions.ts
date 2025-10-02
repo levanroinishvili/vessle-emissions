@@ -9,6 +9,7 @@ import { EmissionsChart } from '../emissions-chart/emissions-chart';
 import { DividerModule } from 'primeng/divider'
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Emission } from '../../models/emission.model';
+import { CHART_TYPES } from '../../app.settings';
 
 @Component({
   selector: 'navtor-emissions',
@@ -27,8 +28,10 @@ import { Emission } from '../../models/emission.model';
 export class Emissions implements OnInit {
 
   protected readonly emissionsFacade = inject(EmissionsFacade)
+  protected readonly chartTypes = CHART_TYPES
 
   protected readonly vesselSelectorControl = new FormControl<Emission[] | null>(null)
+  protected readonly chartTypeSelectorControl = new FormControl<string>(CHART_TYPES[0].value)
 
   protected readonly autoSelectFirstVessel = this.emissionsFacade.data$.pipe(
     takeUntilDestroyed(),

@@ -1,4 +1,6 @@
-import { MenuItem } from "primeng/api";
+import { MenuItem, SelectItem } from "primeng/api";
+import { Emission } from "./models/emission.model";
+import { SeriesOptionsType } from "highcharts";
 
 export const ENDPOINTS = {
     getVessels: 'https://frontendteamfiles.blob.core.windows.net/exercises/vessels.json',
@@ -49,3 +51,23 @@ export const LIFE_SIMULATOR = {
     errorChance: 0.15,
 
 }
+
+export const CHART_TYPES: SelectItem[] = [
+    {value: 'areaspline', label: 'Area Spline'},
+    {value: 'line', label: 'Line'},
+    {value: 'spline', label: 'Spline', disabled: true},
+    {value: 'arcdiagram', label: 'Arc Diagram', disabled: true},
+    {value: 'arearange', label: 'Area Range', disabled: true},
+    {value: 'candlestick', label: 'Candlestick', disabled: true},
+    {value: 'disparityindex', label: 'Disparity Index', disabled: true},
+    {value: 'dumbbell', label: 'Dumbbell', disabled: true},
+    {value: 'flowmap', label: 'Flow Map', disabled: true},
+]
+
+export const EMISSION_SERIES_CONFIG: { emissionType: keyof Emission, seriesOptions: Omit<SeriesOptionsType, 'type'> }[] = [
+    { emissionType: 'co2_emissions', seriesOptions: { name: 'CO2' } },
+    { emissionType: 'sox_emissions', seriesOptions: { name: 'SOx' } },
+    { emissionType: 'nox_emissions', seriesOptions: { name: 'NOx' } },
+    { emissionType: 'pm_emissions', seriesOptions: { name: 'PM' } },
+    { emissionType: 'ch4_emissions', seriesOptions: { name: 'CH4' } },
+]
