@@ -12,12 +12,18 @@ import {
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-import { provideStore } from '@ngrx/store';
+import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
+import { provideHttpClient } from '@angular/common/http';
+import { vesselsFeature } from './state/vessels/vessels.reducer';
+import { emissionsFeature } from './state/emissions/emissions.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(),
     provideStore(),
+    provideState(vesselsFeature),
+    provideState(emissionsFeature),
     provideEffects(),
     provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),

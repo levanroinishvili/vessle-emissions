@@ -1,1 +1,18 @@
-<p>vessels works!</p>
+<h2>Vessels</h2>
+
+{{ vesselsFacade.status$ | async}}
+@switch (vesselsFacade.status$ | async) {
+    @case ('loaded') {
+        @let v = vesselsFacade.data$ | async;
+        <pre>{{v | json}}</pre>
+    }
+    @case ('idle') {
+        <p>Idle? Something's wrong!</p>
+    }
+    @case ('loading') {
+        <p>Loading...</p>
+    }
+    @case ('error') {
+        <p>Error loading vessel info</p>
+    }
+}

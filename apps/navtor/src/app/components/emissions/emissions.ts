@@ -1,9 +1,22 @@
-import { Component } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { EmissionsFacade } from '../../state/emissions/emissions.facade';
 
 @Component({
   selector: 'navtor-emissions',
-  imports: [],
+  imports: [
+    AsyncPipe,
+    JsonPipe,
+  ],
   templateUrl: './emissions.html',
   styleUrl: './emissions.css',
 })
-export class Emissions {}
+export class Emissions implements OnInit {
+
+  protected readonly emissionsFacade = inject(EmissionsFacade)
+
+  ngOnInit(): void {
+    this.emissionsFacade.load()
+  }
+
+}
