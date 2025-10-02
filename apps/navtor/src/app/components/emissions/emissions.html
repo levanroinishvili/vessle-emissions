@@ -16,7 +16,7 @@
     @case ('loaded') {
         @let emissions = emissionsFacade.data$ | async;
 
-        <p-select [options]="emissions" optionLabel="name" optionValue="emissions" placeholder="Select a vessel" optionDisabled="noEmissionsData" #vesselSelector />
+        <p-select name="vesselSelector" [formControl]="vesselSelectorControl" [options]="emissions" optionLabel="name" optionValue="emissions" placeholder="Select a vessel" optionDisabled="noEmissionsData" #vesselSelector />
 
         <div class="divider"></div>
         <navtor-emissions-chart [emissions]="vesselSelector.value" [vessle]="vesselSelector.label()" />

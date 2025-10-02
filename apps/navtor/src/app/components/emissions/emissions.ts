@@ -1,11 +1,14 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { EmissionsFacade } from '../../state/emissions/emissions.facade';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { EmissionsChart } from '../emissions-chart/emissions-chart';
 import { DividerModule } from 'primeng/divider'
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Emission } from '../../models/emission.model';
 
 @Component({
   selector: 'navtor-emissions',
@@ -16,6 +19,7 @@ import { DividerModule } from 'primeng/divider'
     SelectModule,
     EmissionsChart,
     DividerModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './emissions.html',
   styleUrl: './emissions.css',
@@ -23,6 +27,15 @@ import { DividerModule } from 'primeng/divider'
 export class Emissions implements OnInit {
 
   protected readonly emissionsFacade = inject(EmissionsFacade)
+
+  protected readonly vesselSelectorControl = new FormControl<Emission[] | null>(null)
+
+  protected readonly autoSelectFirstVessel = this.emissionsFacade.data$.pipe(
+    takeUntilDestroyed(),
+  ).subscribe(emissions => {
+    const firstEnabled = emissions.find(e => ! e.noEmissionsData)
+    this.vesselSelectorControl.setValue(firstEnabled?.emissions ?? null)
+  })
 
   ngOnInit(): void {
     this.emissionsFacade.load()
