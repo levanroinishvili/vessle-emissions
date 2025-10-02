@@ -2,6 +2,7 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { EmissionsFacade } from '../../state/emissions/emissions.facade';
 import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'navtor-emissions',
@@ -9,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
     AsyncPipe,
     JsonPipe,
     ButtonModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './emissions.html',
   styleUrl: './emissions.css',

@@ -1,14 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { VesselsFacade } from '../../state/vessels/vessels.facade';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { ProgressSpinnerModule } from 'primeng/progressspinner'
 
 @Component({
   selector: 'navtor-vessels',
   imports: [
     AsyncPipe,
-    JsonPipe,
     ButtonModule,
+    TableModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './vessels.html',
   styleUrl: './vessels.css',

@@ -1,19 +1,57 @@
-<h2>Vessels</h2>
+@let status = vesselsFacade.status$ | async;
+<div class="header-with-actions">
+    <h2>Vessels</h2>
 
-@switch (vesselsFacade.status$ | async) {
+    @if (status === 'loaded') {
+        <button pButton size="small" severity="secondary" (click)="vesselsFacade.load()">
+            <i class="pi pi-refresh" pButtonIcon></i>
+            <span pButtonLabel>Reload</span>
+        </button>
+    }
+</div>
+
+@switch (status) {
     @case ('loaded') {
-        @let v = vesselsFacade.data$ | async;
-        <pre>{{v | json}}</pre>
+        <p-table
+            [value]="(vesselsFacade.data$ | async)!"
+            [paginator]="true"
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]"
+        ><!-- p-table -->
+            <ng-template #header>
+                <tr>
+                    <th>Name</th>
+                    <th>Mmsi</th>
+                    <th>Imo</th>
+                    <th>Company</th>
+                    <th>Vessel Type</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-vessel>
+                <tr>
+                    <td>{{ vessel.name }}</td>
+                    <td>{{ vessel.mmsi }}</td>
+                    <td>{{ vessel.imo }}</td>
+                    <td>{{ vessel.companyName }}</td>
+                    <td>{{ vessel.vesselType }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
     }
     @case ('idle') {
         <p>Idle? Something's wrong!</p>
-        <p-button label="Load Vessels" (click)="vesselsFacade.load()"></p-button>
+        <p-button label="Load Vessels" size="small" (click)="vesselsFacade.load()"></p-button>
     }
     @case ('loading') {
         <p>Loading vessel info...</p>
+        <p-progress-spinner ariaLabel="loading" />
     }
     @case ('error') {
         <p>Error loading vessel info</p>
-        <p-button label="Load Vessels" (click)="vesselsFacade.load()"></p-button>
+        <p-button label="Load Vessels" size="small" (click)="vesselsFacade.load()"></p-button>
+    }
+    @default {
+        <p>Unknown error</p>
+        <p-button label="Load Vessels" size="small" (click)="vesselsFacade.load()"></p-button>
     }
 }
