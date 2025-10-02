@@ -1,6 +1,6 @@
 @let status = vesselsFacade.status$ | async;
 <div class="header-with-actions">
-    <h2>Vessels</h2>
+    <h3>Vessels</h3>
 
     @if (status === 'loaded') {
         <button pButton size="small" severity="secondary" (click)="vesselsFacade.load()">
@@ -9,6 +9,8 @@
         </button>
     }
 </div>
+
+<p-divider />
 
 @switch (status) {
     @case ('loaded') {

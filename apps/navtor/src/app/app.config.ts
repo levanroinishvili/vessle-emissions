@@ -17,6 +17,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { vesselsFeature } from './state/vessels/vessels.reducer';
 import { emissionsFeature } from './state/emissions/emissions.reducer';
+import { provideHighcharts } from 'highcharts-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,6 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
     provideAnimationsAsync(),
+    provideHighcharts(),
     providePrimeNG({
         theme: {
             preset: Aura

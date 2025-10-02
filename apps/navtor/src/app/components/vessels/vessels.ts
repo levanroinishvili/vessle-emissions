@@ -4,6 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
+import { DividerModule } from 'primeng/divider'
 
 @Component({
   selector: 'navtor-vessels',
@@ -12,6 +13,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner'
     ButtonModule,
     TableModule,
     ProgressSpinnerModule,
+    DividerModule,
   ],
   templateUrl: './vessels.html',
   styleUrl: './vessels.css',

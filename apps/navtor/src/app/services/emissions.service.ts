@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, isDevMode, PLATFORM_ID } from '@angular/core';
 import { IntervalEmissions } from '../models/emission.model';
-import { CONFIG, ENDPOINTS } from '../app.settings';
+import { LIFE_SIMULATOR, ENDPOINTS } from '../app.settings';
 import { DateString } from '../models/auxiliary';
 import { combineLatest, map } from 'rxjs';
 import { randomVicissitudes } from '../utils/dev-test/rxjs';
@@ -25,7 +25,7 @@ export class EmissionsService {
     rawEmissions$ = this.httpClient.get<IntervalEmissions<DateString>[]>(ENDPOINTS.getEmissions).pipe(
       map(emissions => emissions.map(processEmission)),
       // Add random trouble: delays and occasional errors - only during development, but not on SSR
-      CONFIG.simulateLife && isDevMode() && isPlatformBrowser(inject(PLATFORM_ID)) ? randomVicissitudes() : Identity,
+      LIFE_SIMULATOR.simulateRealLife && isDevMode() && isPlatformBrowser(inject(PLATFORM_ID)) ? randomVicissitudes() : Identity,
     )
 
     emissions$ = combineLatest([

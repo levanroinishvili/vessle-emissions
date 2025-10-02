@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
-import { MAIN_MENU } from './main-menu.config';
+import { MAIN_MENU } from '../../app.settings';
 
 @Component({
   selector: 'navtor-main-menu',

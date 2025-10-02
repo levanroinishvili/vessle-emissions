@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, isDevMode, PLATFORM_ID } from '@angular/core';
-import { CONFIG, ENDPOINTS } from '../app.settings';
+import { LIFE_SIMULATOR, ENDPOINTS } from '../app.settings';
 import { Vessel } from '../models/vessel.model';
 import { DateString } from '../models/auxiliary';
 import { map } from 'rxjs';
@@ -18,7 +18,7 @@ export class VesselService {
     allVessels$ = this.httpClient.get<Vessel<DateString>[]>(ENDPOINTS.getVessels).pipe(
       map(vessles => vessles.map(processVessle)),
       // Add random trouble: delays and occasional errors - only during development, but not on SSR
-      CONFIG.simulateLife && isDevMode() && isPlatformBrowser(inject(PLATFORM_ID)) ? randomVicissitudes() : Identity,
+      LIFE_SIMULATOR.simulateRealLife && isDevMode() && isPlatformBrowser(inject(PLATFORM_ID)) ? randomVicissitudes() : Identity,
     )
 }
 

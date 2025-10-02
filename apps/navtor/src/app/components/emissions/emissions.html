@@ -1,6 +1,6 @@
 @let status = emissionsFacade.status$ | async;
 <div class="header-with-actions">
-    <h2>Emissions</h2>
+    <h3>Emissions</h3>
 
     @if (status === 'loaded') {
         <button pButton size="small" severity="secondary" (click)="emissionsFacade.load()">
@@ -10,15 +10,17 @@
     }
 </div>
 
+<p-divider />
+
 @switch (status) {
     @case ('loaded') {
         @let emissions = emissionsFacade.data$ | async;
 
         <p-select [options]="emissions" optionLabel="name" optionValue="emissions" placeholder="Select a vessel" optionDisabled="noEmissionsData" #vesselSelector />
 
-        {{vesselSelector.value | json}}
+        <div class="divider"></div>
+        <navtor-emissions-chart [emissions]="vesselSelector.value" [vessle]="vesselSelector.label()" />
 
-        <pre>{{emissions | json}}</pre>
     }
     @case ('idle') {
         <p>Idle? Something's wrong!</p>
