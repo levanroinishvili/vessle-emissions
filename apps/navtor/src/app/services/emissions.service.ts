@@ -1,9 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, isDevMode, PLATFORM_ID } from '@angular/core';
 import { IntervalEmissions } from '../models/emission.model';
-import { ENDPOINTS } from '../app.settings';
+import { CONFIG, ENDPOINTS } from '../app.settings';
 import { DateString } from '../models/auxiliary';
 import { map } from 'rxjs';
+import { randomVicissitudes } from '../utils/dev-test/rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import { Identity } from '../utils/various';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +17,8 @@ export class EmissionsService {
 
     allEmissions$ = this.httpClient.get<IntervalEmissions<DateString>[]>(ENDPOINTS.getEmissions).pipe(
       map(emissions => emissions.map(processEmission)),
+      // Add random trouble: delays and occasional errors - only during development, but not on SSR
+      CONFIG.simulateLife && isDevMode() && isPlatformBrowser(inject(PLATFORM_ID)) ? randomVicissitudes() : Identity,
     )
 }
 

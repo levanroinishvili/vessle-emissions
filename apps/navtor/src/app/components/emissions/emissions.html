@@ -1,6 +1,5 @@
 <h2>Emissions</h2>
 
-{{ emissionsFacade.status$ | async}}
 @switch (emissionsFacade.status$ | async) {
     @case ('loaded') {
         @let v = emissionsFacade.data$ | async;
@@ -8,11 +7,13 @@
     }
     @case ('idle') {
         <p>Idle? Something's wrong!</p>
+        <p-button label="Load Vessels" (click)="emissionsFacade.load()"></p-button>
     }
     @case ('loading') {
         <p>Loading emissions info...</p>
     }
     @case ('error') {
         <p>Error loading emissions info</p>
+        <p-button label="Load Vessels" (click)="emissionsFacade.load()"></p-button>
     }
 }

@@ -1,12 +1,14 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { EmissionsFacade } from '../../state/emissions/emissions.facade';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'navtor-emissions',
   imports: [
     AsyncPipe,
     JsonPipe,
+    ButtonModule,
   ],
   templateUrl: './emissions.html',
   styleUrl: './emissions.css',

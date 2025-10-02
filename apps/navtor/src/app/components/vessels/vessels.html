@@ -1,6 +1,5 @@
 <h2>Vessels</h2>
 
-{{ vesselsFacade.status$ | async}}
 @switch (vesselsFacade.status$ | async) {
     @case ('loaded') {
         @let v = vesselsFacade.data$ | async;
@@ -8,11 +7,13 @@
     }
     @case ('idle') {
         <p>Idle? Something's wrong!</p>
+        <p-button label="Load Vessels" (click)="vesselsFacade.load()"></p-button>
     }
     @case ('loading') {
-        <p>Loading...</p>
+        <p>Loading vessel info...</p>
     }
     @case ('error') {
         <p>Error loading vessel info</p>
+        <p-button label="Load Vessels" (click)="vesselsFacade.load()"></p-button>
     }
 }
