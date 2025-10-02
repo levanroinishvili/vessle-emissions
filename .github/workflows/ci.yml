@@ -56,13 +56,41 @@ jobs:
         run: npx nx build navtor --configuration=production --base-href="${{ env.BASE_HREF }}"
 
       # SPA deep-link fallback on GitHub Pages: serve 404.html as index.html
-      - name: Create SPA fallback (404.html)
+      - name: Normalize output & SPA fallback
         run: |
-          OUT_DIR="dist/apps/navtor"
-          # If you're using Angular SSR 'application' builder, browser output might be under .../browser
-          if [ -d "dist/apps/navtor/browser" ]; then OUT_DIR="dist/apps/navtor/browser"; fi
+          set -euo pipefail
+
+          # 1) Find the browser output dir (handles SSR and non-SSR builds)
+          for d in \
+            "dist/apps/navtor/browser" \
+            "dist/apps/navtor" \
+            "dist/navtor/browser" \
+            "dist/navtor"
+          do
+            if [ -d "$d" ]; then OUT_DIR="$d"; break; fi
+          done
+          if [ -z "${OUT_DIR:-}" ]; then
+            echo "❌ Could not find output directory"; exit 1
+          fi
+
+          # 2) Choose the correct index:
+          # Prefer CSR → plain index.html → (last resort) SSR index
+          if [ -f "$OUT_DIR/index.csr.html" ]; then
+            cp "$OUT_DIR/index.csr.html" "$OUT_DIR/index.html"
+          elif [ -f "$OUT_DIR/index.html" ]; then
+            : # already fine
+          elif [ -f "$OUT_DIR/index.ssr.html" ]; then
+            # Not ideal for static hosting, but better than failing:
+            cp "$OUT_DIR/index.ssr.html" "$OUT_DIR/index.html"
+          else
+            echo "❌ No index.*.html found in $OUT_DIR"; ls -la "$OUT_DIR"; exit 1
+          fi
+
+          # 3) SPA deep-link fallback for GitHub Pages
           cp "$OUT_DIR/index.html" "$OUT_DIR/404.html"
+
           echo "OUT_DIR=$OUT_DIR" >> $GITHUB_ENV
+
 
       # Upload the built site as a Pages artifact
       - uses: actions/upload-pages-artifact@v3
