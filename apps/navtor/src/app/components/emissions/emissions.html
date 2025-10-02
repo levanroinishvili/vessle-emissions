@@ -12,8 +12,13 @@
 
 @switch (status) {
     @case ('loaded') {
-        @let v = emissionsFacade.data$ | async;
-        <pre>{{v | json}}</pre>
+        @let emissions = emissionsFacade.data$ | async;
+
+        <p-select [options]="emissions" optionLabel="name" optionValue="emissions" placeholder="Select a vessel" optionDisabled="noEmissionsData" #vesselSelector />
+
+        {{vesselSelector.value | json}}
+
+        <pre>{{emissions | json}}</pre>
     }
     @case ('idle') {
         <p>Idle? Something's wrong!</p>

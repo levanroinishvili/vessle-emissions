@@ -57,7 +57,13 @@ function mergeShipEmissions(vessels: Vessel[], emissions: IntervalEmissions[]) {
   return vessels.map(vessel => ({
     ...vessel,
     emissions: emissions.find(shipEmissions => shipEmissions.id === vessel.id)?.timeSeries ?? []
-  })).concat(unknownShipEmissions)
+  }))
+    // .filter(vesselEmissions => vesselEmissions.emissions.length) // Remove vessels without emissions info
+    .concat(unknownShipEmissions)
+    .map(shipEmissions => ({
+      ...shipEmissions,
+      noEmissionsData: shipEmissions.emissions.length === 0, // Mark ships with no emissions data with a boolean flag
+    }))
 }
 
 const unknownVessel: Vessel = {
